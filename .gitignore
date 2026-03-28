@@ -1,0 +1,17 @@
+node_modules/
+*.log
+.DS_Store
+.vscode/
+.idea/
+dist/
+build/
+coverage/
+*.test.ts
+*.spec.ts
+test/
+tests/
+.github/
+.git/
+.travis.yml
+appveyor.yml
+*.tgz

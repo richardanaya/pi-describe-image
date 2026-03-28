@@ -1,0 +1,36 @@
+{
+  "name": "pi-describe-image",
+  "version": "0.0.0",
+  "description": "A pi extension to describe images using vision models",
+  "license": "MIT",
+  "author": "Richard Anaya",
+  "type": "commonjs",
+  "main": "index.ts",
+  "keywords": [
+    "pi",
+    "pi-extension",
+    "vision",
+    "image",
+    "claude",
+    "gpt",
+    "gemini",
+    "ai",
+    "llm"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/richardanaya/pi-describe-image.git"
+  },
+  "bugs": {
+    "url": "https://github.com/richardanaya/pi-describe-image/issues"
+  },
+  "homepage": "https://github.com/richardanaya/pi-describe-image#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "pi": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}
