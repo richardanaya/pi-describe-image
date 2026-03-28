@@ -2,6 +2,8 @@
 
 A pi extension that provides a `describe_image` tool to analyze and describe images using vision-capable AI models.
 
+> **When to use this:** This extension is primarily useful when your **main conversation model doesn't have vision capabilities** (e.g., older models, text-only APIs, or lightweight local models), but you still need to analyze images. You can keep using your preferred model for text/chat while delegating image descriptions to a dedicated vision model (Claude, GPT-4o, Gemini, etc.).
+
 ## Quick Start
 
 ```bash
@@ -74,7 +76,7 @@ Config search order:
 
 ## Usage
 
-Once configured, the `describe_image` tool is available for the LLM to use:
+Once configured, the `describe_image` tool is available for the LLM to use. This is especially helpful when your main model lacks vision - the LLM can "see" images by calling out to a vision-capable model on demand:
 
 ```
 User: What's in this image? https://example.com/photo.jpg
@@ -84,7 +86,7 @@ User: Read the text from this screenshot: ./screenshot.png
 User: What colors are in this image? https://example.com/painting.jpg
 ```
 
-The LLM can pass a custom `prompt` parameter to control how the image is described. If no prompt is given, it uses a default: "Describe this image in detail. What do you see?"
+The LLM can pass a custom `prompt` parameter to control how the image is described (general description, extract text, analyze style, etc.). If no prompt is given, it uses a default: "Describe this image in detail. What do you see?"
 
 ## Tool Parameters
 
