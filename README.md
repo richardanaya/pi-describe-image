@@ -32,16 +32,22 @@ pi /reload
 
 ## Installation
 
-### From local directory (development)
+### Option 1: Install via npm (recommended)
+
+```bash
+pi install npm:pi-describe-image
+```
+
+### Option 2: Install from git
+
+```bash
+pi install git:github.com/richardanaya/pi-describe-image
+```
+
+### Option 3: Local development
 
 ```bash
 ln -s /path/to/pi-describe-image ~/.pi/extensions/pi-describe-image
-```
-
-### Via npm (when published)
-
-```bash
-npm install -g pi-describe-image
 ```
 
 Then reload pi: `pi /reload`
