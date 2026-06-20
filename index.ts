@@ -14,7 +14,8 @@ import { homedir } from "node:os";
  * describe-image.json format:
  * {
  *   "provider": "anthropic",              // Required: provider name
- *   "model": "claude-sonnet-4-20250514"   // Required: model ID
+ *   "model": "claude-sonnet-4-20250514",  // Required: model ID
+ *   "apiKey": "sk-ant-..."                // Optional: API key override
  * }
  *
  * Config search order:
@@ -25,6 +26,7 @@ import { homedir } from "node:os";
 interface DescribeImageConfig {
 	provider: string;
 	model: string;
+	apiKey?: string;
 }
 
 interface ToolParams {
@@ -76,7 +78,9 @@ function loadConfig(cwd: string): DescribeImageConfig | undefined {
 function isValidConfig(config: unknown): config is DescribeImageConfig {
 	if (typeof config !== "object" || config === null) return false;
 	const c = config as Record<string, unknown>;
-	return typeof c.provider === "string" && typeof c.model === "string";
+	if (typeof c.provider !== "string" || typeof c.model !== "string") return false;
+	if (c.apiKey !== undefined && typeof c.apiKey !== "string") return false;
+	return true;
 }
 
 /**
@@ -148,7 +152,7 @@ export default function describeImageExtension(pi: ExtensionAPI) {
 		label: "Describe Image",
 		description:
 			"Describe an image using a vision model. Accepts either a local file path or a URL, and an optional prompt. " +
-			"Requires describe-image.json config with 'provider' and 'model' fields.",
+			"Requires describe-image.json config with 'provider' and 'model' fields. Optional 'apiKey' overrides pi's default key resolution.",
 		parameters: Type.Object({
 			path: Type.Optional(
 				Type.String({
@@ -197,13 +201,19 @@ export default function describeImageExtension(pi: ExtensionAPI) {
 				);
 			}
 
-			// Get API key and headers
+			// Get API key and headers (config apiKey takes precedence over pi's key resolution)
 			const auth = await ctx.modelRegistry.getApiKeyAndHeaders(model);
-			if (!auth.ok) {
-				throw new Error(`Authentication failed: ${auth.error}`);
-			}
-			if (!auth.apiKey) {
-				throw new Error(`No API key available for provider "${config.provider}"`);
+			const apiKey = config.apiKey || (auth.ok ? auth.apiKey : undefined);
+			const headers = auth.ok ? auth.headers : undefined;
+
+			if (!apiKey) {
+				if (!auth.ok && !config.apiKey) {
+					throw new Error(`Authentication failed: ${auth.error}`);
+				}
+				throw new Error(
+					`No API key available for provider "${config.provider}". ` +
+						"Set apiKey in describe-image.json, an environment variable, or ~/.pi/agent/config.json.",
+				);
 			}
 
 			onUpdate?.({
@@ -231,8 +241,8 @@ export default function describeImageExtension(pi: ExtensionAPI) {
 
 			// Call the vision model
 			const response = await completeSimple(model, context, {
-				apiKey: auth.apiKey,
-				headers: auth.headers,
+				apiKey,
+				headers,
 				signal,
 			});
 

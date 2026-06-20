@@ -13,7 +13,7 @@ Copy the appropriate one to your project as `.pi/describe-image.json` or to `~/.
 }
 ```
 
-Requires `ANTHROPIC_API_KEY` environment variable.
+Requires `ANTHROPIC_API_KEY` environment variable, or set `apiKey` in the config.
 
 ## OpenAI (GPT)
 
@@ -24,7 +24,7 @@ Requires `ANTHROPIC_API_KEY` environment variable.
 }
 ```
 
-Requires `OPENAI_API_KEY` environment variable.
+Requires `OPENAI_API_KEY` environment variable, or set `apiKey` in the config.
 
 ## Google (Gemini)
 
@@ -36,6 +36,25 @@ Requires `OPENAI_API_KEY` environment variable.
 ```
 
 Requires `GOOGLE_GENERATIVE_AI_API_KEY` environment variable (or OAuth via `/login`).
+
+## xAI (Grok)
+
+```json
+{
+  "provider": "xai",
+  "model": "grok-4-1-fast"
+}
+```
+
+Requires `XAI_API_KEY` environment variable, or set `apiKey` directly in the config:
+
+```json
+{
+  "provider": "xai",
+  "model": "grok-4-1-fast",
+  "apiKey": "xai-your-api-key"
+}
+```
 
 ## AWS Bedrock (Claude)
 

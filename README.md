@@ -54,7 +54,7 @@ Then reload pi: `pi /reload`
 
 ## Configuration
 
-Create a `describe-image.json` configuration file with just two fields: `provider` and `model`.
+Create a `describe-image.json` configuration file with `provider` and `model`. Optionally include `apiKey` to provide credentials directly in the config.
 
 ### Project-level config (recommended)
 Create `.pi/describe-image.json` in your project root:
@@ -119,6 +119,12 @@ Any model that supports image input can be used. Some popular options:
 - `gemini-2.5-pro`
 - `gemini-2.0-flash`
 
+### xAI (Grok)
+- `grok-4-1-fast` (recommended)
+- `grok-4-fast`
+- `grok-4.3`
+- `grok-2-vision`
+
 ### AWS Bedrock
 - `anthropic.claude-sonnet-4-20250514-v1:0`
 - `amazon.nova-pro-v1:0`
@@ -127,18 +133,30 @@ Any model that supports image input can be used. Some popular options:
 
 ```json
 {
-  "provider": "<provider-name>",  // Required: e.g., "anthropic", "openai"
-  "model": "<model-id>"          // Required: specific model ID
+  "provider": "<provider-name>",  // Required: e.g., "anthropic", "openai", "xai"
+  "model": "<model-id>",          // Required: specific model ID
+  "apiKey": "<api-key>"           // Optional: override pi's default key resolution
 }
 ```
 
 ## API Key Setup
 
-The extension uses the same API key resolution as pi's core:
+API keys are resolved in this order:
 
-1. OAuth credentials (if provider supports /login)
-2. Environment variables (e.g., `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`)
-3. Configured API keys in `~/.pi/agent/config.json`
+1. `apiKey` field in `describe-image.json` (if set)
+2. OAuth credentials (if provider supports `/login`)
+3. Environment variables (e.g., `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `XAI_API_KEY`)
+4. Configured API keys in `~/.pi/agent/config.json`
+
+Example with inline API key:
+
+```json
+{
+  "provider": "xai",
+  "model": "grok-4-1-fast",
+  "apiKey": "xai-your-api-key"
+}
+```
 
 ## Error Handling
 
